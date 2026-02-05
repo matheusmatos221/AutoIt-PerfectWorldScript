@@ -28,5 +28,3 @@ Func initGUI()
 		EndSwitch
 	WEnd
 EndFunc
-
-
