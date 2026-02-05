@@ -10,16 +10,36 @@
 
 ; Script Start - Add your code below here
 
-
+#include <MsgBoxConstants.au3>
 
 Main()
 
 
-Func Main()
+Func GetHWndClick()
 	;Pausa execução do script até que determinada tela apareça e retorna o handle
 	Local $hWnd = WinWaitActive("[TITLE:The Classic PW 1.2.6;CLASS:ElementClient Window]")
 	ConsoleWrite($hWnd& @CRLF)
-	;Local $handle = ControlGetHandle("[TITLE:"The Classic PW 1.2.6;CLASS:ElementClient Window]","")
-	;MsgBox(1,"title",$hWnd)
 EndFunc
 
+
+Func GetHWndList()
+    ; Retrieve a list of window handles.
+    Local $aList = WinList("[TITLE:The Classic PW 1.2.6;CLASS:ElementClient Window]")
+
+#cs
+    ; Loop through the array displaying only visable windows with a title.
+    For $i = 1 To $aList[0][0]
+        If $aList[$i][0] <> "" And BitAND(WinGetState($aList[$i][1]), 2) Then
+            MsgBox($MB_SYSTEMMODAL, "", "Title: " & $aList[$i][0] & @CRLF & "Handle: " & $aList[$i][1])
+        EndIf
+    Next
+#ce
+#cs
+    ; Loop through the array displaying only visable windows with a title.
+    For $i = 1 To $aList[0][0]
+        If $aList[$i][0] <> "" And BitAND(WinGetState($aList[$i][1]), 2) Then
+            ConsoleWrite($aList[$i][1] & @CRLF)
+        EndIf
+    Next
+#ce
+EndFunc
