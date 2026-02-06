@@ -10,9 +10,16 @@
 
 ; Script Start - Add your code below here
 
-#include <MsgBoxConstants.au3>
+;#include <MsgBoxConstants.au3>
 
-Main()
+GetHWndList()
+
+
+Func GetHWnd()
+	;Pausa execução do script até que determinada tela apareça e retorna o handle
+	Local $hWnd = WinWait("[TITLE:The Classic PW 1.2.6;CLASS:ElementClient Window]")
+	ConsoleWrite("Obteve o handler: " & $hWnd & @CRLF)
+EndFunc
 
 
 Func GetHWndClick()
@@ -24,7 +31,7 @@ EndFunc
 
 Func GetHWndList()
     ; Retrieve a list of window handles.
-    Local $aList = WinList("[TITLE:The Classic PW 1.2.6;CLASS:ElementClient Window]")
+    Global $aList = WinList("[TITLE:The Classic PW 1.2.6;CLASS:ElementClient Window]")
 
 #cs
     ; Loop through the array displaying only visable windows with a title.
