@@ -161,12 +161,11 @@ WEnd
 ; ================= FUNÇÕES =================
 
 Func ExecuteMacroIndex($index)
-
     $g_iDelay = Int(GUICtrlRead($inpDelay))
     If $g_iDelay < 0 Then $g_iDelay = 10
 
     GUICtrlSetColor($lblStatus, 0xFF0000)
-    GUICtrlSetData($lblStatus, " ? RUNNING")
+    GUICtrlSetData($lblStatus, "RUNNING")
 
     AddLog("Macro " & ($index+1) & " iniciada.")
 
@@ -194,7 +193,7 @@ Func ExecuteMacroIndex($index)
     AddLog("Macro " & ($index+1) & " finalizada.")
 
     GUICtrlSetColor($lblStatus, 0x00AA00)
-    GUICtrlSetData($lblStatus, " ? IDLE")
+    GUICtrlSetData($lblStatus, "IDLE")
 
 EndFunc
 
@@ -348,6 +347,20 @@ Func ApplyLayout()
 
     AddLog("Layout aplicado.")
 
+EndFunc
+
+Func UpdateStatus($running)
+    If $running Then
+        GUICtrlSetData($lblStatus, "EXECUTANDO")
+        GUICtrlSetColor($lblStatus, 0xFF0000)
+    Else
+        GUICtrlSetData($lblStatus, "PRONTO")
+        If $g_sTheme = "Dark" Then
+            GUICtrlSetColor($lblStatus, 0x00FF00)
+        Else
+            GUICtrlSetColor($lblStatus, 0x006600)
+        EndIf
+    EndIf
 EndFunc
 
 Func AddLog($text)
