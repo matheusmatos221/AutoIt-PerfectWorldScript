@@ -19,7 +19,7 @@ Global $hGUI = GUICreate("Multi Window Manager v10 FINAL", 1350, 950)
 ; ================= STATUS =================
 
 GUICtrlCreateLabel("STATUS:", 20, 15, 60, 20)
-Global $lblStatus = GUICtrlCreateLabel(" ? IDLE", 80, 15, 150, 20)
+Global $lblStatus = GUICtrlCreateLabel("ESPERANDO", 80, 15, 150, 20)
 GUICtrlSetColor($lblStatus, 0x00AA00)
 
 ; ================= GERENCIAMENTO =================
@@ -165,7 +165,7 @@ Func ExecuteMacroIndex($index)
     If $g_iDelay < 0 Then $g_iDelay = 10
 
     GUICtrlSetColor($lblStatus, 0xFF0000)
-    GUICtrlSetData($lblStatus, "RUNNING")
+    GUICtrlSetData($lblStatus, "EXECUTANDO")
 
     AddLog("Macro " & ($index+1) & " iniciada.")
 
@@ -193,7 +193,7 @@ Func ExecuteMacroIndex($index)
     AddLog("Macro " & ($index+1) & " finalizada.")
 
     GUICtrlSetColor($lblStatus, 0x00AA00)
-    GUICtrlSetData($lblStatus, "IDLE")
+    GUICtrlSetData($lblStatus, "ESPERANDO")
 
 EndFunc
 
