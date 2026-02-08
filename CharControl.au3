@@ -9,12 +9,12 @@ Global Const $TOTAL_MACROS = 10
 
 Global $g_aWindows[10]
 Global $g_iCount = 0
-Global $g_iDelay = 10
+Global $g_iDelay = 0
 Global $g_sHotkey[10]
 
 ; ================= GUI =================
 
-Global $hGUI = GUICreate("Multi Window Manager v10 FINAL", 1350, 950)
+Global $hGUI = GUICreate("Perfect Multi Window Manager v1.0", 1350, 950)
 
 ; ================= STATUS =================
 
@@ -27,7 +27,7 @@ GUICtrlSetColor($lblStatus, 0x00AA00)
 GUICtrlCreateGroup("Gerenciamento", 20, 40, 500, 380)
 
 GUICtrlCreateLabel("Filtro:", 40, 80, 80, 20)
-Global $inpFilter = GUICtrlCreateInput("", 120, 75, 200, 25)
+Global $inpFilter = GUICtrlCreateInput("The Classic PW 1.2.6", 120, 75, 200, 25)
 
 GUICtrlCreateLabel("Qtd:", 340, 80, 40, 20)
 Global $inpQtd = GUICtrlCreateInput("6", 380, 75, 40, 25)
@@ -46,7 +46,7 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 GUICtrlCreateGroup("Envio Direto", 550, 40, 750, 180)
 
 GUICtrlCreateLabel("Delay (ms):", 570, 80, 80, 20)
-Global $inpDelay = GUICtrlCreateInput("10", 650, 75, 60, 25)
+Global $inpDelay = GUICtrlCreateInput("320", 650, 75, 60, 25)
 
 Global $btnSpace = GUICtrlCreateButton("SPACE", 750, 70, 100, 35)
 
@@ -89,6 +89,11 @@ GUICtrlSetData($inpMacro[0], "{F2}|{F1}")
 GUICtrlSetData($inpHotkey[0], "!q")
 $g_sHotkey[0] = "!q"
 
+; Macro 2 padrão
+GUICtrlSetData($inpMacro[1], "{SPACE}|{SPACE}")
+GUICtrlSetData($inpHotkey[1], "!a")
+$g_sHotkey[1] = "!a"
+
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 ; ================= LAYOUT =================
@@ -121,6 +126,9 @@ GUISetState()
 
 ; Registrar hotkey padrão
 HotKeySet($g_sHotkey[0], "Macro1")
+
+; Registrar hotkey padrão
+HotKeySet($g_sHotkey[1], "Macro2")
 
 ; ================= LOOP =================
 
@@ -162,33 +170,48 @@ WEnd
 
 Func ExecuteMacroIndex($index)
     $g_iDelay = Int(GUICtrlRead($inpDelay))
-    If $g_iDelay < 0 Then $g_iDelay = 10
+    If $g_iDelay < 50 Then $g_iDelay = 50
 
     GUICtrlSetColor($lblStatus, 0xFF0000)
     GUICtrlSetData($lblStatus, "EXECUTANDO")
 
     AddLog("Macro " & ($index+1) & " iniciada.")
 
+	; Guarda a primeira janela selecionada
+	Local $hFirstWindow = 0
+
     Local $macro = GUICtrlRead($inpMacro[$index])
     Local $parts = StringSplit($macro, "|")
-
-    For $p = 1 To $parts[0]
 
         For $i = 0 To $g_iCount - 1
 
             If GUICtrlRead($chkWin[$i]) = $GUI_CHECKED Then
 
+				; Salva a primeira janela
+				If $hFirstWindow = 0 Then
+					$hFirstWindow =  $g_aWindows[$i]
+				EndIf
+
+				; Ativa janela atual
                 WinActivate($g_aWindows[$i])
                 WinWaitActive($g_aWindows[$i], "", 2)
                 Sleep(20)
-                Send($parts[$p])
-                Sleep($g_iDelay)
+
+				; Executa TODA a macro nela
+				For $p = 1 To $parts[0]
+					ControlSend($g_aWindows[$i], "", "", $parts[$p])
+					Sleep($g_iDelay)
+				Next
 
             EndIf
 
         Next
 
-    Next
+	; Volta para a primeira janela no final
+	If $hFirstWindow <> 0 Then
+		WinActivate($hFirstWindow)
+		WinWaitActive($hFirstWindow, "", 2)
+	EndIf
 
     AddLog("Macro " & ($index+1) & " finalizada.")
 
